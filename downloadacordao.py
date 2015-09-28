@@ -1,4 +1,6 @@
 #!/usr/bin/env python
+# coding=utf-8
+
 import csv
 import random
 import urllib
@@ -13,21 +15,33 @@ list = []
 
 
 url = 'http://redir.stf.jus.br/paginadorpub/paginador.jsp?docTP=AC&docID='
-arg1 = sys.argv[1]
+# arg1 = sys.argv[1]
 metaList = []
 
-if arg1 == '--help':
+try:
+    if sys.argv[1] == '--help':
+        print('Escreva o diretorio para download',  # por algum motivo está saindo o código e não os caractéres
+              ' em que serao armazenados os documentos'
+              'e, em seguida, a quantidade de arquivos para download'
+              'ex: ./downloadacordao.py ~/Documentos/ 10 - '
+              'realiza o download de 10 acórdãos aleatórios para a pasta ~/Documentos/')
+        exit()
+
+except IndexError:
     print('Escreva o diretorio para download',
-          ' em que serao armazenados os documentos')
+          ' em que serao armazenados os documentos'
+          'e, em seguida, a quantidade de arquivos para download'
+          'ex: ./downloadacordao.py ~/Documentos/ 10 - '
+          'realiza o download de 10 acórdãos aleatórios para a pasta ~/Documentos/')
     exit()
 
-def getRandomList(listSize,init, end):
-    for i in range(1, listSize):          # Creates random list from 821 to 600000
-        randInt = random.randint(init, end)
+def getRandomList(listSize, initial, end):
+    for i in range(1, listSize):          # Creates random list from initial to end
+        randInt = random.randint(initial, end)
         list.append(randInt)
 
 
-getRandomList(300, 800, 62000)
+getRandomList(sys.argv[2], 800, 62000)
 
 
 def metadataColector(a):
