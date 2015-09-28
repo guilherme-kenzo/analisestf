@@ -41,13 +41,14 @@ def getRandomList(listSize, initial, end):
         list.append(randInt)
 
 
-getRandomList(sys.argv[2], 800, 62000)
+getRandomList(int(sys.argv[2]), 800, 62000)
 
 
 def metadataColector(a):
     parser.set_document(a)
     pdfMetaData = doc.info[0]
     return pdfMetaData['Title']
+
 
 def returnMetaTuple(whichStr):
     for i in metaList:
@@ -59,23 +60,25 @@ for file in list:               # iterates over random list to download files
     fileStr = str(file)
     pdfName = fileStr + '.pdf'
     try:
-        fileName, header = urllib.urlretrieve(url + fileStr, arg1 + pdfName)
+        fileName, header = urllib.urlretrieve(url + fileStr, sys.argv[1] + pdfName)
         print('Downloading ' + fileName)
     except:
         print("Download Problem - aborting download")
+        raise
         break
     # print(header)               
 
-    parser = PDFParser(open(arg1 + pdfName, 'rb'))
+    parser = PDFParser(open(sys.argv[1] + pdfName, 'rb'))
     doc = PDFDocument(parser)
     pdfTitle = metadataColector(doc)
 
     metaList += [(fileStr, pdfTitle)]
 
-    with open('file.csv', 'w') as op:
-        a = csv.writer(op, delimiter=', ',
-        quotechar='|', quoting=csv.QUOTE_MINIMAL)
-        data = metaList
-        a.writerows(data)
-
-print metaList[0]
+with open('file.csv', 'w') as op:  # por algum motivo só está gravando algumas metadatas.
+    writeCSV = csv.writer(op, delimiter=',',
+    quotechar='|', quoting=csv.QUOTE_MINIMAL)
+    data = metaList
+    writeCSV.writerows(data)
+    
+print('Arquivo file.csv armazenou metadados dos PDFs')
+# print metaList[0]              
